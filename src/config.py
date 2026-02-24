@@ -20,12 +20,12 @@ RANDOM_SEED = 42
 REWRITE_MODELS = [
     {
         "provider": "openai",
-        "model": "gpt-4o",
-        "label": "gpt4o",
+        "model": "gpt-5.2-chat-latest",
+        "label": "gpt52_instant",
     },
     {
         "provider": "anthropic",
-        "model": "claude-sonnet-4-20250514",
+        "model": "claude-sonnet-4-6-20250220",
         "label": "claude_sonnet",
     },
 ]
