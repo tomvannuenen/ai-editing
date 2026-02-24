@@ -1,0 +1,223 @@
+\documentclass[12pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[english]{babel}
+\usepackage{geometry}
+\geometry{margin=1in}
+\usepackage{setspace}
+\onehalfspacing
+\usepackage{natbib}
+\bibliographystyle{apalike}
+\usepackage{hyperref}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue,
+  citecolor=blue,
+  urlcolor=blue
+}
+\usepackage{booktabs}
+
+\title{Linguistic Markers of Creativity in Writing:\\A Literature Review for Studying AI Text Sanitization}
+\author{}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+As large language models (LLMs) are increasingly used to ``improve'' and rewrite human text, a growing body of evidence suggests that this process systematically reduces the linguistic diversity and creative richness of the original writing. To study this phenomenon empirically, we need a principled set of linguistic markers that capture the dimensions along which creative writing differs from formulaic or standardized prose. This literature review synthesizes research from creativity science, computational linguistics, corpus stylistics, information theory, and recent AI-focused studies to identify the most useful and well-validated linguistic markers for measuring creativity in written text. We organize these markers into eight categories: lexical diversity, syntactic complexity, figurative language and semantic distance, textual entropy and unpredictability, sentiment and affective range, discourse cohesion and coherence, stylometric and part-of-speech features, and readability profiles. For each category, we review the theoretical motivation, available computational tools, and empirical evidence linking the marker to creative writing quality. We conclude by discussing how these markers can be operationalized in a study comparing original human creative writing with LLM-rewritten versions, and what patterns of ``sanitization'' the existing literature leads us to expect.
+\end{abstract}
+
+\section{Introduction}
+
+The rise of large language models (LLMs) such as GPT-4 and Claude has introduced a new dynamic into human writing practices. These models are increasingly used not only to generate text from scratch, but to ``improve,'' ``polish,'' and rewrite existing human prose. While such tools can correct grammatical errors and improve surface-level fluency, a growing body of research suggests that they simultaneously flatten the distinctive features that make writing creative, individual, and culturally grounded \citep{anderson2024homogenizing, kreminski2024homogenization, homogenization_arxiv2025}.
+
+The study of creativity in language has deep roots, spanning from the Russian Formalists' concept of \emph{defamiliarization} \citep{shklovsky1917art} to Guilford's psychometric framework of divergent thinking \citep{guilford1950creativity}, Boden's taxonomy of combinational, exploratory, and transformational creativity \citep{boden2004creative}, and modern computational approaches using natural language processing (NLP). What these traditions share is the recognition that creative language use is fundamentally about \emph{deviation from the expected}---whether that deviation occurs at the lexical, syntactic, semantic, or discourse level.
+
+This review aims to identify the most empirically grounded and computationally tractable linguistic markers of creativity in writing, with the specific goal of enabling a study that compares original human creative writing samples with LLM-rewritten versions of the same texts. We organize the relevant markers into eight categories, each grounded in a distinct research tradition but all converging on the same question: what makes writing creative, and how can we measure the loss of that creativity when AI intervenes?
+
+\section{Theoretical Foundations of Creativity}
+
+\subsection{Divergent Thinking and the Guilford Tradition}
+
+The modern scientific study of creativity begins with \citet{guilford1950creativity}, who distinguished between convergent and divergent thinking and argued that creativity depends primarily on the latter. In his Structure of Intellect model \citep{guilford1967nature}, Guilford identified four key dimensions of divergent thinking: \emph{fluency} (the quantity of ideas produced), \emph{flexibility} (the variety of categories those ideas span), \emph{originality} (the statistical rarity of the ideas), and \emph{elaboration} (the degree of detail and development). These four dimensions remain foundational in creativity assessment, underpinning instruments such as the Alternate Uses Task and the Torrance Tests of Creative Thinking \citep{torrance1966torrance, kim2006can}.
+
+For the study of writing, Guilford's framework suggests that creative texts should exhibit greater lexical and conceptual variety (fluency, flexibility), more unusual and surprising word choices and combinations (originality), and richer descriptive and narrative detail (elaboration). The challenge is operationalizing these constructs at the text level using computational methods.
+
+\subsection{Boden's Taxonomy of Creativity}
+
+\citet{boden2004creative, boden2009creativity} proposed a three-part taxonomy distinguishing \emph{combinational creativity} (novel combinations of familiar ideas), \emph{exploratory creativity} (systematic exploration of a conceptual space), and \emph{transformational creativity} (fundamental alteration of the conceptual space itself, enabling ideas that were previously inconceivable). Boden ranks these in ascending order of creative significance, with transformational creativity representing the deepest form.
+
+For linguistic analysis, combinational creativity may manifest as unusual collocations and metaphors; exploratory creativity as systematic variation within a genre's conventions; and transformational creativity as radical departures from expected syntactic structures, narrative forms, or semantic associations. Boden's framework predicts that truly creative writing will not merely recombine existing elements but will sometimes violate the very rules that define its genre---precisely the kind of deviation that LLMs, trained to maximize statistical likelihood, are structurally unlikely to produce.
+
+\subsection{Defamiliarization and Foregrounding}
+
+The Russian Formalist Viktor Shklovsky introduced the concept of \emph{defamiliarization} (\emph{ostranenie}) in 1917, arguing that the purpose of art is to make the familiar strange, thereby restoring the perceptual freshness that habitual processing destroys \citep{shklovsky1917art}. Shklovsky's key insight was that literary language is defined by its \emph{deviation} from ordinary language use: it increases ``the difficulty and duration of perception'' and makes the reader attend to form rather than merely extracting content.
+
+This concept has deep connections to the deviation theory of literary style developed by Jakobson and other formalists \citep{jakobson1960linguistics}, which holds that literariness inheres in the degree to which language use departs from expected patterns. The related concept of \emph{foregrounding}---the use of linguistic devices to make certain textual elements stand out---encompasses both \emph{deviation} (departure from linguistic norms) and \emph{parallelism} (unexpected repetition of patterns). These concepts provide the theoretical grounding for several of the computational markers discussed below: creative writing should exhibit more deviation at the lexical, syntactic, and semantic levels than ordinary prose.
+
+\section{Lexical Diversity}
+
+Lexical diversity---the range and variety of vocabulary used in a text---is one of the most extensively studied markers of writing quality and, by extension, creativity. The basic intuition is straightforward: a writer who draws from a larger vocabulary and avoids repetitive word choices demonstrates greater linguistic resourcefulness and creative flexibility.
+
+\subsection{Measurement Approaches}
+
+The simplest measure of lexical diversity is the \emph{type-token ratio} (TTR), the proportion of unique words (types) to total words (tokens) in a text. However, TTR is highly sensitive to text length, declining as texts get longer simply because common function words are necessarily repeated \citep{koizumi2012effects}. This limitation has motivated the development of more robust measures, including vocd-D, HD-D, and the \emph{Measure of Textual Lexical Diversity} (MTLD), which computes the mean length of sequential word strings that maintain a given TTR level \citep{mccarthy2010mtld}.
+
+\citet{jarvis2013capturing} argues that lexical diversity is itself a multidimensional construct, encompassing not only vocabulary range but also the evenness of word distribution, the rarity of words used, and the degree to which the vocabulary is dispersed across different semantic domains. This multidimensionality means that no single metric fully captures the construct, and multiple complementary measures should be used.
+
+\subsection{Lexical Diversity and Writing Quality}
+
+Studies consistently find that lexical diversity, particularly when measured by MTLD or vocd-D, is a significant predictor of human-rated writing quality \citep{lu2012relationship, mccarthy2010mtld}. In the context of AI-generated text, recent work has shown that LLM outputs tend to exhibit lower lexical diversity than human writing, with more restricted vocabulary and greater reliance on high-frequency words \citep{benchmarking_diversity2024, frontiers_chatgpt_l2_2025}. Notably, models trained iteratively on synthetic data show progressive declines in lexical diversity across generations, suggesting that the homogenization effect compounds over time \citep{benchmarking_diversity2024}.
+
+\subsection{Hapax Legomena and the Long Tail}
+
+A closely related concept is the prevalence of \emph{hapax legomena}---words that occur only once in a given text. Under Zipf's law \citep{zipf1949human}, approximately half of the distinct words in a natural corpus are hapax legomena, reflecting the ``long tail'' of rare words that characterizes natural language use \citep{williams2015zipf, popescu2020hapax}. Creative writing, which often involves unusual, archaic, invented, or domain-specific vocabulary, is expected to exhibit a particularly rich long tail. LLMs, by contrast, tend to favor high-probability tokens, potentially compressing this long tail and reducing the proportion of rare and unique word forms.
+
+\section{Syntactic Complexity}
+
+Creative writing does not distinguish itself solely at the word level; the structural architecture of sentences is equally important. Syntactic complexity encompasses both the structural elaboration of sentences (e.g., embedding depth, clause count, phrase length) and the sophistication of the syntactic structures employed (e.g., use of subordination, relative clauses, inverted word order).
+
+\subsection{Metrics and Tools}
+
+\citet{lu2010automatic} developed a suite of fourteen syntactic complexity measures spanning five dimensions: length of production units, amounts of subordination, amounts of coordination, degree of phrasal sophistication, and overall sentence complexity. These have become standard in automated writing evaluation. The Tool for the Automatic Analysis of Syntactic Sophistication and Complexity (TAASSC) extends this work by incorporating frequency-based measures of syntactic sophistication \citep{crossley2019taassc, kyle2016measuring}.
+
+\subsection{Syntactic Complexity and Creative Style}
+
+In creative writing, syntactic complexity serves multiple aesthetic functions. Long, multiply embedded sentences can create a sense of flowing consciousness (as in Proust or Faulkner); short, declarative sentences can produce urgency or starkness (as in Hemingway or Carver). What matters for creativity is not complexity \emph{per se} but syntactic \emph{variety}---the range of sentence structures employed and the writer's ability to modulate between them for rhetorical effect.
+
+Research on LLM-generated text suggests a tendency toward syntactic standardization: outputs exhibit more regular sentence structures with less variation in clause type, embedding depth, and sentence length \citep{tang2024survey, stylometric_llm2025}. This syntactic regularity---while producing grammatically impeccable prose---may eliminate the deliberate structural play that characterizes creative writing.
+
+\section{Figurative Language and Semantic Distance}
+
+Figurative language---metaphor, simile, metonymy, hyperbole, irony---is widely regarded as a hallmark of creative writing. Its cognitive significance lies in the connections it forges between semantically distant concepts, forcing the reader to construct new meaning rather than merely decoding familiar associations.
+
+\subsection{Semantic Distance as a Creativity Metric}
+
+The concept of \emph{semantic distance} has emerged as a powerful computational proxy for creativity. Drawing on word embedding models such as Word2Vec \citep{mikolov2013word2vec} and GloVe \citep{pennington2014glove}, researchers measure the cosine distance between vector representations of words or phrases to quantify how conceptually remote a given combination is.
+
+The SemDis platform \citep{beaty2014automating} has validated this approach extensively, finding that a latent semantic distance factor derived from multiple embedding models predicts human creativity ratings with remarkable accuracy (GloVe: $r = .97$ for novelty ratings). \citet{kenett2019semantic} and \citet{green2019going} provide theoretical grounding, arguing that creative cognition involves traversing larger distances in semantic memory networks, and that this traversal is measurable through embedding-based distance metrics.
+
+\subsection{Metaphor and AI}
+
+Recent work on automatic metaphor scoring \citep{do2024automatic} and metaphor generation \citep{survey_figurative2024} suggests that while LLMs can produce metaphorical language, they tend to rely on conventional metaphors rather than generating genuinely novel figurative expressions. \citet{pouscoulous2024literary} argues that literary metaphor functions as a form of defamiliarization, and that the degree to which AI-generated metaphors achieve genuine defamiliarization (as opposed to merely combining semantically distant terms) remains an open question. The neural basis of figurative language production \citep{prabhakaran2014neural} suggests it requires flexible recombination of semantic memory in ways that may not be fully captured by statistical pattern matching.
+
+\subsection{Creativity Index and Attribution}
+
+\citet{chakrabarty2024creativity} introduced a Creativity Index that combines verbatim matching with semantic distance measures (using Word Mover's Distance) to quantify how much LLM-generated creative text draws from its training data versus producing genuinely novel expressions. Their finding that LLM outputs cluster more tightly than human outputs suggests that AI-generated text explores a narrower region of the semantic space even when prompted to be creative.
+
+\section{Textual Entropy and Unpredictability}
+
+Information theory, founded by \citet{shannon1948mathematical}, provides a rigorous mathematical framework for quantifying the unpredictability of text. Higher entropy indicates greater variability and surprise; lower entropy indicates more predictable patterns.
+
+\subsection{Entropy as a Marker of Literary Quality}
+
+\citet{febres2022approximate} applied Approximate Entropy to distinguish canonical fiction (``classics'') from non-canonical fiction, finding that canonical texts exhibit significantly higher sequential unpredictability. This result aligns with Shklovsky's theory of defamiliarization: canonical literary texts are more ``demanding'' because they resist the reader's expectations at multiple levels. \citet{rosso2019complexity} extended this work by analyzing complexity-entropy relationships at different levels of textual organization (character, word, sentence), finding that the interplay between predictability and surprise varies systematically across levels and genres.
+
+\subsection{Entropy and AI-Generated Text}
+
+The entropy profile of LLM-generated text differs markedly from human writing. Because LLMs are optimized to select high-probability next tokens, their outputs tend to exhibit lower per-character and per-word entropy than human writing---typically around 3--4 bits per character, compared to the wider range found in human creative writing \citep{tang2024survey}. This lower entropy manifests as more predictable word choices, more formulaic sentence structures, and reduced capacity for the kind of surprise that characterizes creative prose.
+
+\section{Sentiment and Affective Range}
+
+Creative writing often derives its power from emotional complexity---the interplay of positive and negative affects, shifts in emotional valence across a narrative, and the evocation of nuanced or ambiguous emotional states.
+
+\subsection{Dimensional Models of Affect}
+
+The dominant model in computational affect analysis is the Valence-Arousal-Dominance (VAD) framework \citep{russell1980circumplex}, which represents emotions along three continuous dimensions. The NRC VAD Lexicon \citep{mohammad2018nrc} provides valence, arousal, and dominance scores for over 20,000 English words, enabling automated analysis of the affective texture of texts.
+
+\subsection{Psycholinguistic Approaches: LIWC}
+
+The Linguistic Inquiry and Word Count (LIWC) program \citep{tausczik2010psychological, pennebaker1999linguistic} provides a complementary approach, categorizing words into over 100 psychologically meaningful categories including positive and negative emotion, cognitive processes (insight, causation, certainty), social processes, and temporal orientation. \citet{pennebaker2003aging} used LIWC to analyze the collected works of eminent writers, finding systematic age-related changes in emotional expression and cognitive complexity. \citet{kelley2021language} validated LIWC-based measures for assessing creativity, finding that more creative individuals used more words from creativity-related dictionary categories.
+
+\subsection{Emotional Flatness in AI Text}
+
+Multiple studies have documented that LLM-generated text exhibits a narrower emotional range than human writing, with less negative emotion, less hate speech, and a general tendency toward emotional neutrality \citep{tang2024survey}. This ``emotional flatness'' is consistent with the models' training objectives, which typically optimize for helpfulness and safety rather than emotional authenticity. For a study of AI text sanitization, the prediction is clear: rewritten versions should show compressed affective range, with extreme positive and negative sentiments moderated toward a blander middle ground.
+
+\section{Discourse Cohesion and Coherence}
+
+Beyond sentence-level features, the way a text hangs together at the discourse level---through cohesive ties, thematic progression, and narrative structure---is an important dimension of writing quality.
+
+\subsection{Computational Tools}
+
+Coh-Metrix \citep{graesser2004cohmetrix, mcnamara2014automated} analyzes texts on over 200 measures of cohesion, including referential cohesion (overlap in nouns and arguments across sentences), deep cohesion (causal, intentional, and temporal connectives), and latent semantic analysis-based coherence. TAACO \citep{crossley2016taaco} complements Coh-Metrix by providing finer-grained measures of local (sentence-level), global (paragraph-level), and overall text cohesion.
+
+\subsection{Cohesion in Creative vs.\ Formulaic Writing}
+
+In creative writing, cohesion operates differently than in expository text. Literary texts may deliberately employ \emph{cohesion gaps}---jumps in time, perspective, or topic---for aesthetic effect, creating ambiguity and requiring greater inferential work from the reader. Conversely, formulaic text tends toward explicit, redundant cohesion with clear connective markers (``moreover,'' ``furthermore,'' ``in summary'')---precisely the pattern observed in LLM outputs \citep{tang2024survey}. A study of AI text sanitization should therefore examine whether rewriting increases explicit cohesive markers while reducing the deliberate gaps and ambiguities that characterize creative prose.
+
+\section{Stylometric and Part-of-Speech Features}
+
+Stylometry---the quantitative study of literary style---offers a rich set of features for characterizing individual writing style and detecting its alteration.
+
+\subsection{Part-of-Speech Distribution}
+
+The distribution of parts of speech varies systematically across text types and authors. Fictional texts tend to have more adverbs, pronouns, and punctuation but fewer adjectives than non-fictional texts \citep{literary_profiling2022, pos_genre2023}. \citet{adj_adv_stylometric2023} demonstrated that adjective and adverb placement patterns are reliable stylometric parameters for authorship attribution, suggesting that they capture genuine aspects of individual style.
+
+Function words---articles, prepositions, pronouns, conjunctions---are particularly valuable for stylometric analysis because they are used largely unconsciously and are topic-independent \citep{stamatatos2009survey, pennebaker2011secret}. \citet{pennebaker1999linguistic} showed that function word usage patterns correlate with personality traits, including openness to experience, which is itself associated with creativity.
+
+\subsection{N-gram Patterns and Stylistic Fingerprints}
+
+Character and word n-grams capture stylistic information at lexical, morphological, and syntactic levels simultaneously \citep{ngram_style2022, lagutina2019stylometric}. Recent work has shown that LLMs have distinct and consistent ``stylistic fingerprints'' that persist even when prompted to write in different styles \citep{stylistic_fingerprints2025}. These fingerprints include characteristic patterns of conjunction usage, the ``rule of three'' (tripartite lists), hedging language, and inflated importance statements \citep{tang2024survey}. Detecting the imposition of these LLM fingerprints onto previously human-written text would be a direct measure of stylistic sanitization.
+
+\subsection{Historiometric Content Analysis}
+
+\citet{simonton1984genius, simonton1990shakespeare} pioneered the use of content analysis on creative products, including computer-based analysis of Shakespeare's sonnets examining lexical choices and their relationship to aesthetic success. This tradition demonstrates that quantitative linguistic analysis can meaningfully capture aspects of creative quality even in canonical literary works.
+
+\section{Readability}
+
+Readability formulas such as the Flesch Reading Ease and Flesch-Kincaid Grade Level \citep{flesch1948new, kincaid1975derivation} measure surface-level textual complexity using sentence length and word length (syllable count) as proxies. While these formulas were developed for functional text and have well-known limitations when applied to creative writing---they cannot capture figurative language, narrative structure, or intentional stylistic choices---they remain useful as coarse-grained indicators of lexical and syntactic complexity.
+
+For the study of AI text sanitization, readability metrics serve a specific diagnostic function: if LLM rewriting systematically reduces sentence length, simplifies vocabulary, and standardizes syntactic structures, this should manifest as shifts toward more ``readable'' (i.e., lower grade-level) scores---a quantitative signature of the smoothing and simplification process.
+
+\section{The Homogenization Hypothesis: Evidence from AI Studies}
+
+Recent empirical work provides direct evidence that LLM involvement in writing reduces creative diversity at multiple linguistic levels.
+
+\subsection{Individual vs.\ Collective Effects}
+
+\citet{anderson2024homogenizing} analyzed 2,200 college admissions essays across three preregistered studies, finding that while individual GPT-generated essays can match or exceed human quality, the \emph{collective diversity} of GPT-generated essay sets is significantly lower than that of human-written sets. Critically, this diversity gap widens with more essays, and enhancing GPT's creative diversity through parameter or prompt modifications does not eliminate it. \citet{kreminski2024homogenization} found that the homogenization effect operates primarily at the group level: different users given the same LLM produce more semantically similar ideas than users given a non-LLM creativity tool, even though individual-level idea repetition does not increase.
+
+\subsection{Multi-Level Sanitization}
+
+The homogenization effect is not limited to semantics. Research documents sanitization at the lexical level (restricted vocabulary, overuse of certain words), the syntactic level (more regular sentence structures), the stylistic level (loss of individual voice), and the cultural level (loss of region-specific markers and their replacement with generic or Western-normative language) \citep{homogenization_arxiv2025, can_ai_writing2024}. The overuse of specific ``AI vocabulary'' words---terms whose frequency increased dramatically in text after 2023---provides a particularly clear stylistic marker of LLM involvement \citep{tang2024survey}.
+
+\subsection{Creativity Benchmarks}
+
+\citet{llm_creativity_peaked2025} tested 14 LLMs on the Alternative Uses Task, finding that only 0.28\% of LLM responses reached the 90th percentile of human creative responses, making humans approximately 35.7 times more likely to produce standout creative ideas. \citet{wang2025benchmarking} proposed the NEOGAUGE framework for assessing LLM creativity, distinguishing between convergent creativity (generating correct solutions) and divergent creativity (generating solutions that are also novel). \citet{chakrabarty2024creativity} found that LLM creative outputs cluster more tightly in semantic space than human outputs, suggesting a narrower range of creative exploration.
+
+\section{Synthesis and Proposed Operationalization}
+
+Table~\ref{tab:markers} summarizes the eight categories of linguistic markers reviewed, along with representative computational tools and the expected direction of change when human creative writing is rewritten by an LLM.
+
+\begin{table}[htbp]
+\centering
+\small
+\caption{Summary of linguistic creativity markers and expected AI sanitization effects.}
+\label{tab:markers}
+\begin{tabular}{p{3.2cm}p{3.5cm}p{2.5cm}p{3.8cm}}
+\toprule
+\textbf{Marker Category} & \textbf{Key Measures} & \textbf{Tools} & \textbf{Expected LLM Effect} \\
+\midrule
+Lexical Diversity & TTR, MTLD, vocd-D, hapax ratio & TAACO, spaCy & Decrease in diversity; fewer rare words \\
+Syntactic Complexity & MLS, subordination ratio, clause density & TAASSC, L2SCA & Reduced variation; more standardized structures \\
+Figurative Language & Semantic distance, metaphor density & SemDis, GloVe & More conventional metaphors; reduced distance \\
+Textual Entropy & Shannon Entropy, Approximate Entropy & Custom scripts & Lower entropy; more predictable sequences \\
+Sentiment \& Affect & VAD scores, LIWC categories, emotion range & NRC-VAD, LIWC & Compressed range; emotional flattening \\
+Cohesion \& Coherence & Referential, connective, and LSA coherence & Coh-Metrix, TAACO & More explicit cohesion; fewer deliberate gaps \\
+Stylometric Features & POS distribution, n-grams, function words & NLTK, spaCy & Homogenized POS patterns; LLM fingerprints \\
+Readability & Flesch-Kincaid, sentence/word length & textstat & Lower grade level; smoothed complexity \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The literature reviewed here converges on a clear set of predictions for a study comparing original human creative writing with LLM-rewritten versions. Across all eight marker categories, the expected direction of change is toward \emph{regularization}: reduced variability, more predictable patterns, narrower semantic exploration, flatter emotional profiles, and the imposition of generic stylistic conventions. This regularization is not a bug in LLM design---it follows directly from the statistical optimization that makes these models fluent---but it represents a systematic loss of the very properties that make writing creative.
+
+The proposed methodology---collecting creative writing samples, having them rewritten by an LLM, and measuring changes across these eight dimensions---would provide empirical evidence for the nature and extent of AI text sanitization, grounding what has so far been largely anecdotal observation in rigorous quantitative analysis.
+
+\bibliography{references}
+
+\end{document}
