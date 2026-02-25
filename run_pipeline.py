@@ -3,12 +3,13 @@
 
 Usage
 -----
-    # Run the full pipeline end-to-end:
+    # Run the full pipeline end-to-end (batch mode, 50% cheaper):
     python run_pipeline.py
 
     # Run individual stages:
     python run_pipeline.py --stage sample
-    python run_pipeline.py --stage rewrite
+    python run_pipeline.py --stage rewrite              # batch mode (default)
+    python run_pipeline.py --stage rewrite --mode sync  # one-at-a-time
     python run_pipeline.py --stage analyze
     python run_pipeline.py --stage compare
 """
@@ -45,16 +46,16 @@ def stage_sample():
 
 # ── Stage 2: Rewrite with LLMs ────────────────────────────────────────
 
-def stage_rewrite():
+def stage_rewrite(mode: str = "batch"):
     from src.data_loader import load_sample
     from src.rewriter import rewrite_stories, save_rewrites
 
     print("=" * 60)
-    print("STAGE 2: Rewriting stories with LLMs")
+    print(f"STAGE 2: Rewriting stories with LLMs (mode={mode})")
     print("=" * 60)
 
     sample = load_sample("sample")
-    result = rewrite_stories(sample)
+    result = rewrite_stories(sample, mode=mode)
     save_rewrites(result)
     return result
 
@@ -215,13 +216,24 @@ def main():
         default=None,
         help="Run a single stage. Omit to run the full pipeline.",
     )
+    parser.add_argument(
+        "--mode",
+        choices=["batch", "sync"],
+        default="batch",
+        help="Rewrite mode: 'batch' (50%% cheaper, default) or 'sync'.",
+    )
     args = parser.parse_args()
 
     if args.stage:
-        STAGES[args.stage]()
+        if args.stage == "rewrite":
+            stage_rewrite(mode=args.mode)
+        else:
+            STAGES[args.stage]()
     else:
-        for name, fn in STAGES.items():
-            fn()
+        stage_sample()
+        stage_rewrite(mode=args.mode)
+        stage_analyze()
+        stage_compare()
 
     print("\nDone.")
 

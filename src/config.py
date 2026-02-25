@@ -10,7 +10,7 @@ PROCESSED_DIR = DATA_DIR / "processed"
 RESULTS_DIR = PROJECT_ROOT / "results"
 
 # ── Sampling ───────────────────────────────────────────────────────────
-N_SAMPLES = 500               # number of stories to sample from the dataset
+N_SAMPLES = 300               # number of stories to sample from the dataset
 MIN_WORD_COUNT = 150          # minimum words to keep a story
 MAX_WORD_COUNT = 2000         # maximum words (longer texts get truncated)
 RANDOM_SEED = 42
